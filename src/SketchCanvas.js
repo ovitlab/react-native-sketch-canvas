@@ -113,7 +113,7 @@ class SketchCanvas extends React.Component {
 
         UIManager.dispatchViewManagerCommand(
           this._handle,
-          UIManager.RNSketchCanvas.Commands.newPath,
+          UIManager.getViewManagerConfig(RNSketchCanvas).Commands.newPath,
           [
             this._path.id,
             processColor(this._path.color),
@@ -122,7 +122,7 @@ class SketchCanvas extends React.Component {
         );
         UIManager.dispatchViewManagerCommand(
           this._handle,
-          UIManager.RNSketchCanvas.Commands.addPoint,
+          UIManager.getViewManagerConfig(RNSketchCanvas).Commands.addPoint,
           [
             parseFloat(
               (gestureState.x0 - this._offset.x).toFixed(2) * this._screenScale
@@ -142,7 +142,7 @@ class SketchCanvas extends React.Component {
         if (this._path) {
           UIManager.dispatchViewManagerCommand(
             this._handle,
-            UIManager.RNSketchCanvas.Commands.addPoint,
+            UIManager.getViewManagerConfig(RNSketchCanvas).Commands.addPoint,
             [
               parseFloat(
                 (gestureState.moveX - this._offset.x).toFixed(2) *
@@ -178,7 +178,7 @@ class SketchCanvas extends React.Component {
         }
         UIManager.dispatchViewManagerCommand(
           this._handle,
-          UIManager.RNSketchCanvas.Commands.endPath,
+          UIManager.getViewManagerConfig(RNSketchCanvas).Commands.endPath,
           []
         );
       },
@@ -215,7 +215,7 @@ class SketchCanvas extends React.Component {
     this._path = null;
     UIManager.dispatchViewManagerCommand(
       this._handle,
-      UIManager.RNSketchCanvas.Commands.clear,
+      UIManager.getViewManagerConfig(RNSketchCanvas).Commands.clear,
       []
     );
   }
@@ -243,7 +243,7 @@ class SketchCanvas extends React.Component {
       });
       UIManager.dispatchViewManagerCommand(
         this._handle,
-        UIManager.RNSketchCanvas.Commands.addPath,
+        UIManager.getViewManagerConfig(RNSketchCanvas).Commands.addPath,
         [
           data.path.id,
           processColor(data.path.color),
@@ -261,7 +261,7 @@ class SketchCanvas extends React.Component {
     this._paths = this._paths.filter((p) => p.path.id !== id);
     UIManager.dispatchViewManagerCommand(
       this._handle,
-      UIManager.RNSketchCanvas.Commands.deletePath,
+      UIManager.getViewManagerConfig(RNSketchCanvas).Commands.deletePath,
       [id]
     );
   }
@@ -282,7 +282,7 @@ class SketchCanvas extends React.Component {
     if (granted) {
       UIManager.dispatchViewManagerCommand(
         this._handle,
-        UIManager.RNSketchCanvas.Commands.save,
+        UIManager.getViewManagerConfig(RNSketchCanvas).Commands.save,
         [
           imageType,
           folder,
@@ -371,19 +371,21 @@ class SketchCanvas extends React.Component {
 
 SketchCanvas.MAIN_BUNDLE =
   Platform.OS === "ios"
-    ? UIManager.RNSketchCanvas.Constants.MainBundlePath
+    ? UIManager.getViewManagerConfig(RNSketchCanvas).Constants.MainBundlePath
     : "";
 SketchCanvas.DOCUMENT =
   Platform.OS === "ios"
-    ? UIManager.RNSketchCanvas.Constants.NSDocumentDirectory
+    ? UIManager.getViewManagerConfig(RNSketchCanvas).Constants
+        .NSDocumentDirectory
     : "";
 SketchCanvas.LIBRARY =
   Platform.OS === "ios"
-    ? UIManager.RNSketchCanvas.Constants.NSLibraryDirectory
+    ? UIManager.getViewManagerConfig(RNSketchCanvas).Constants
+        .NSLibraryDirectory
     : "";
 SketchCanvas.CACHES =
   Platform.OS === "ios"
-    ? UIManager.RNSketchCanvas.Constants.NSCachesDirectory
+    ? UIManager.getViewManagerConfig(RNSketchCanvas).Constants.NSCachesDirectory
     : "";
 
 module.exports = SketchCanvas;
