@@ -453,16 +453,20 @@ public class SketchCanvas extends View {
             mBackgroundImage != null && cropToImageSize ? mOriginalWidth : getWidth(),
             mBackgroundImage != null && cropToImageSize ? mOriginalHeight : getHeight(), 
             Bitmap.Config.ARGB_8888);
-        ExifInterface exif = null;
-        try {
-            exif = new ExifInterface(backgroundURI.getPath());
-        } catch (IOException e) {
-            e.printStackTrace();
+
+        if(backgroundURI != null) {
+            ExifInterface exif = null;
+            try {
+                exif = new ExifInterface(backgroundURI.getPath());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            int orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_UNDEFINED);
+
+            Bitmap newBitmap = rotateBitmap(bitmap, orientation);
         }
-
-        int orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_UNDEFINED);
-
-        Bitmap newBitmap = rotateBitmap(bitmap, orientation);
+        
         Canvas canvas = new Canvas(bitmap);
         canvas.drawARGB(transparent ? 0 : 255, 255, 255, 255);
 
