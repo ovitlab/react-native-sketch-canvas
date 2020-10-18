@@ -266,7 +266,7 @@ class SketchCanvas extends React.Component {
     );
   }
 
-  save(
+  async save(
     imageType,
     transparent,
     folder,
@@ -275,19 +275,25 @@ class SketchCanvas extends React.Component {
     includeText,
     cropToImageSize
   ) {
-    UIManager.dispatchViewManagerCommand(
-      this._handle,
-      UIManager.RNSketchCanvas.Commands.save,
-      [
-        imageType,
-        folder,
-        filename,
-        transparent,
-        includeImage,
-        includeText,
-        cropToImageSize,
-      ]
+    const granted = await requestPermissions(
+      this.props.permissionDialogTitle,
+      this.props.permissionDialogMessage
     );
+    if (granted) {
+      UIManager.dispatchViewManagerCommand(
+        this._handle,
+        UIManager.RNSketchCanvas.Commands.save,
+        [
+          imageType,
+          folder,
+          filename,
+          transparent,
+          includeImage,
+          includeText,
+          cropToImageSize,
+        ]
+      );
+    }
   }
 
   getPaths() {
@@ -323,13 +329,6 @@ class SketchCanvas extends React.Component {
         callback
       );
     }
-  }
-
-  async componentDidMount() {
-    await requestPermissions(
-      this.props.permissionDialogTitle,
-      this.props.permissionDialogMessage
-    );
   }
 
   render() {
