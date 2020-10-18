@@ -140,6 +140,8 @@ export interface RNSketchCanvasProps {
   onClearPressed?: () => void;
   onPathsChange?: (pathsCount: number) => void;
   user?: string;
+  permissionDialogTitle?: string;
+  permissionDialogMessage?: string;
 
   closeComponent?: JSX.Element;
   eraseComponent?: JSX.Element;
