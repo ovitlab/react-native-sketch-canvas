@@ -1,5 +1,5 @@
-import React from "react";
-import PropTypes from "prop-types";
+import React from 'react';
+import PropTypes from 'prop-types';
 import ReactNative, {
   requireNativeComponent,
   NativeModules,
@@ -9,11 +9,11 @@ import ReactNative, {
   Platform,
   ViewPropTypes,
   processColor,
-} from "react-native";
-import isEqual from "fast-deep-equal/es6";
-import { requestPermissions } from "./handlePermissions";
+} from 'react-native';
+import isEqual from 'fast-deep-equal/es6';
+import { requestPermissions } from './handlePermissions';
 
-const RNSketchCanvas = requireNativeComponent("RNSketchCanvas", SketchCanvas, {
+const RNSketchCanvas = requireNativeComponent('RNSketchCanvas', SketchCanvas, {
   nativeOnly: {
     nativeID: true,
     onChange: true,
@@ -41,18 +41,18 @@ class SketchCanvas extends React.Component {
         font: PropTypes.string,
         fontSize: PropTypes.number,
         fontColor: PropTypes.string,
-        overlay: PropTypes.oneOf(["TextOnSketch", "SketchOnText"]),
+        overlay: PropTypes.oneOf(['TextOnSketch', 'SketchOnText']),
         anchor: PropTypes.shape({ x: PropTypes.number, y: PropTypes.number }),
         position: PropTypes.shape({ x: PropTypes.number, y: PropTypes.number }),
-        coordinate: PropTypes.oneOf(["Absolute", "Ratio"]),
-        alignment: PropTypes.oneOf(["Left", "Center", "Right"]),
+        coordinate: PropTypes.oneOf(['Absolute', 'Ratio']),
+        alignment: PropTypes.oneOf(['Left', 'Center', 'Right']),
         lineHeightMultiple: PropTypes.number,
       })
     ),
     localSourceImage: PropTypes.shape({
       filename: PropTypes.string,
       directory: PropTypes.string,
-      mode: PropTypes.oneOf(["AspectFill", "AspectFit", "ScaleToFill"]),
+      mode: PropTypes.oneOf(['AspectFill', 'AspectFit', 'ScaleToFill']),
     }),
 
     permissionDialogTitle: PropTypes.string,
@@ -61,7 +61,7 @@ class SketchCanvas extends React.Component {
 
   static defaultProps = {
     style: null,
-    strokeColor: "#000000",
+    strokeColor: '#000000',
     strokeWidth: 3,
     onPathsChange: () => {},
     onStrokeStart: () => {},
@@ -75,8 +75,8 @@ class SketchCanvas extends React.Component {
     text: null,
     localSourceImage: null,
 
-    permissionDialogTitle: "",
-    permissionDialogMessage: "",
+    permissionDialogTitle: '',
+    permissionDialogMessage: '',
   };
 
   state = {
@@ -89,7 +89,7 @@ class SketchCanvas extends React.Component {
     this._paths = [];
     this._path = null;
     this._handle = null;
-    this._screenScale = Platform.OS === "ios" ? 1 : PixelRatio.get();
+    this._screenScale = Platform.OS === 'ios' ? 1 : PixelRatio.get();
     this._offset = { x: 0, y: 0 };
     this._size = { width: 0, height: 0 };
     this._initialized = false;
@@ -102,6 +102,7 @@ class SketchCanvas extends React.Component {
 
       onPanResponderGrant: (evt, gestureState) => {
         if (!this.props.touchEnabled) return;
+        if (gestureState.numberActiveTouches > 1) return;
         const e = evt.nativeEvent;
         this._offset = { x: e.pageX - e.locationX, y: e.pageY - e.locationY };
         this._path = {
@@ -162,26 +163,9 @@ class SketchCanvas extends React.Component {
           this.props.onStrokeChanged(x, y);
         }
       },
-      onPanResponderRelease: (evt, gestureState) => {
-        if (!this.props.touchEnabled) return;
-        if (this._path) {
-          this.props.onStrokeEnd({
-            path: this._path,
-            size: this._size,
-            drawer: this.props.user,
-          });
-          this._paths.push({
-            path: this._path,
-            size: this._size,
-            drawer: this.props.user,
-          });
-        }
-        UIManager.dispatchViewManagerCommand(
-          this._handle,
-          UIManager.getViewManagerConfig(RNSketchCanvas).Commands.endPath,
-          []
-        );
-      },
+      onPanResponderRelease: this.handlePanResponderRelease,
+      onPanResponderTerminationRequest: (evt, gestureState) => true,
+      onPanResponderTerminate: this.handlePanResponderRelease,
 
       onShouldBlockNativeResponder: (evt, gestureState) => {
         return true;
@@ -210,6 +194,27 @@ class SketchCanvas extends React.Component {
     return text;
   }
 
+  handlePanResponderRelease = (evt, gestureState) => {
+    if (!this.props.touchEnabled) return;
+    if (this._path) {
+      this.props.onStrokeEnd({
+        path: this._path,
+        size: this._size,
+        drawer: this.props.user,
+      });
+      this._paths.push({
+        path: this._path,
+        size: this._size,
+        drawer: this.props.user,
+      });
+    }
+    UIManager.dispatchViewManagerCommand(
+      this._handle,
+      UIManager.getViewManagerConfig(RNSketchCanvas).Commands.endPath,
+      []
+    );
+  };
+
   clear() {
     this._paths = [];
     this._path = null;
@@ -234,7 +239,7 @@ class SketchCanvas extends React.Component {
       if (this._paths.filter((p) => p.path.id === data.path.id).length === 0)
         this._paths.push(data);
       const pathData = data.path.data.map((p) => {
-        const coor = p.split(",").map((pp) => parseFloat(pp).toFixed(2));
+        const coor = p.split(',').map((pp) => parseFloat(pp).toFixed(2));
         return `${
           (coor[0] * this._screenScale * this._size.width) / data.size.width
         },${
@@ -308,7 +313,7 @@ class SketchCanvas extends React.Component {
     cropToImageSize,
     callback
   ) {
-    if (Platform.OS === "ios") {
+    if (Platform.OS === 'ios') {
       SketchCanvasManager.transferToBase64(
         this._handle,
         imageType,
@@ -349,14 +354,14 @@ class SketchCanvas extends React.Component {
         }}
         {...this.panResponder.panHandlers}
         onChange={(e) => {
-          if (e.nativeEvent.hasOwnProperty("pathsUpdate")) {
+          if (e.nativeEvent.hasOwnProperty('pathsUpdate')) {
             this.props.onPathsChange(e.nativeEvent.pathsUpdate);
           } else if (
-            e.nativeEvent.hasOwnProperty("success") &&
-            e.nativeEvent.hasOwnProperty("path")
+            e.nativeEvent.hasOwnProperty('success') &&
+            e.nativeEvent.hasOwnProperty('path')
           ) {
             this.props.onSketchSaved(e.nativeEvent.success, e.nativeEvent.path);
-          } else if (e.nativeEvent.hasOwnProperty("success")) {
+          } else if (e.nativeEvent.hasOwnProperty('success')) {
             this.props.onSketchSaved(e.nativeEvent.success);
           }
         }}
@@ -370,22 +375,22 @@ class SketchCanvas extends React.Component {
 }
 
 SketchCanvas.MAIN_BUNDLE =
-  Platform.OS === "ios"
+  Platform.OS === 'ios'
     ? UIManager.getViewManagerConfig(RNSketchCanvas).Constants.MainBundlePath
-    : "";
+    : '';
 SketchCanvas.DOCUMENT =
-  Platform.OS === "ios"
+  Platform.OS === 'ios'
     ? UIManager.getViewManagerConfig(RNSketchCanvas).Constants
         .NSDocumentDirectory
-    : "";
+    : '';
 SketchCanvas.LIBRARY =
-  Platform.OS === "ios"
+  Platform.OS === 'ios'
     ? UIManager.getViewManagerConfig(RNSketchCanvas).Constants
         .NSLibraryDirectory
-    : "";
+    : '';
 SketchCanvas.CACHES =
-  Platform.OS === "ios"
+  Platform.OS === 'ios'
     ? UIManager.getViewManagerConfig(RNSketchCanvas).Constants.NSCachesDirectory
-    : "";
+    : '';
 
 module.exports = SketchCanvas;
