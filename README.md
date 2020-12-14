@@ -447,14 +447,6 @@ Note: Because native module cannot read the file in JS bundle, file path cannot 
 - iOS (https://youtu.be/_jO4ky400Eo)<br/>
   <img src="https://i.imgur.com/AwkFu94.png" height="400" />&nbsp;&nbsp;&nbsp;&nbsp;<img src="https://i.imgur.com/UDcaiaz.png" height="400" />
 
-## Example
-
----
-
-The source code includes 3 examples, using build-in UI components, using with only canvas, and sync between two canvases.
-
-Check full example app in the [example](./example) folder
-
 ## Troubleshooting
 
 ---
