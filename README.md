@@ -24,13 +24,13 @@ A React Native component for drawing by touching on both iOS and Android.
 
 ---
 
-Install from `npm` (only support RN >= 0.40)
+Install from `npm`
 
 ```bash
 npm install @kichiyaki/react-native-sketch-canvas --save
 ```
 
-Link native code
+Link native code (Note - react-native >=0.60 no need to link)
 
 ```bash
 react-native link @kichiyaki/react-native-sketch-canvas

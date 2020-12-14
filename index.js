@@ -1,7 +1,7 @@
-import React from "react";
-import PropTypes from "prop-types";
-import { View, TouchableOpacity, FlatList, ViewPropTypes } from "react-native";
-import SketchCanvas from "./src/SketchCanvas";
+import React from 'react';
+import PropTypes from 'prop-types';
+import { View, TouchableOpacity, FlatList, ViewPropTypes } from 'react-native';
+import SketchCanvas from './src/SketchCanvas';
 
 export default class RNSketchCanvas extends React.Component {
   static propTypes = {
@@ -44,11 +44,11 @@ export default class RNSketchCanvas extends React.Component {
         font: PropTypes.string,
         fontSize: PropTypes.number,
         fontColor: PropTypes.string,
-        overlay: PropTypes.oneOf(["TextOnSketch", "SketchOnText"]),
+        overlay: PropTypes.oneOf(['TextOnSketch', 'SketchOnText']),
         anchor: PropTypes.shape({ x: PropTypes.number, y: PropTypes.number }),
         position: PropTypes.shape({ x: PropTypes.number, y: PropTypes.number }),
-        coordinate: PropTypes.oneOf(["Absolute", "Ratio"]),
-        alignment: PropTypes.oneOf(["Left", "Center", "Right"]),
+        coordinate: PropTypes.oneOf(['Absolute', 'Ratio']),
+        alignment: PropTypes.oneOf(['Left', 'Center', 'Right']),
         lineHeightMultiple: PropTypes.number,
       })
     ),
@@ -84,26 +84,26 @@ export default class RNSketchCanvas extends React.Component {
     strokeWidthComponent: null,
 
     strokeColors: [
-      { color: "#000000" },
-      { color: "#FF0000" },
-      { color: "#00FFFF" },
-      { color: "#0000FF" },
-      { color: "#0000A0" },
-      { color: "#ADD8E6" },
-      { color: "#800080" },
-      { color: "#FFFF00" },
-      { color: "#00FF00" },
-      { color: "#FF00FF" },
-      { color: "#FFFFFF" },
-      { color: "#C0C0C0" },
-      { color: "#808080" },
-      { color: "#FFA500" },
-      { color: "#A52A2A" },
-      { color: "#800000" },
-      { color: "#008000" },
-      { color: "#808000" },
+      { color: '#000000' },
+      { color: '#FF0000' },
+      { color: '#00FFFF' },
+      { color: '#0000FF' },
+      { color: '#0000A0' },
+      { color: '#ADD8E6' },
+      { color: '#800080' },
+      { color: '#FFFF00' },
+      { color: '#00FF00' },
+      { color: '#FF00FF' },
+      { color: '#FFFFFF' },
+      { color: '#C0C0C0' },
+      { color: '#808080' },
+      { color: '#FFA500' },
+      { color: '#A52A2A' },
+      { color: '#800000' },
+      { color: '#008000' },
+      { color: '#808000' },
     ],
-    alphlaValues: ["33", "77", "AA", "FF"],
+    alphlaValues: ['33', '77', 'AA', 'FF'],
     defaultStrokeIndex: 0,
     defaultStrokeWidth: 3,
 
@@ -117,8 +117,8 @@ export default class RNSketchCanvas extends React.Component {
     text: null,
     localSourceImage: null,
 
-    permissionDialogTitle: "",
-    permissionDialogMessage: "",
+    permissionDialogTitle: '',
+    permissionDialogMessage: '',
   };
 
   constructor(props) {
@@ -127,7 +127,7 @@ export default class RNSketchCanvas extends React.Component {
     this.state = {
       color: props.strokeColors[props.defaultStrokeIndex].color,
       strokeWidth: props.defaultStrokeWidth,
-      alpha: "FF",
+      alpha: 'FF',
     };
 
     this._colorChanged = false;
@@ -169,35 +169,40 @@ export default class RNSketchCanvas extends React.Component {
     this._sketchCanvas.deletePath(id);
   }
 
+  buildFileName = (date = new Date()) => {
+    return (
+      date.getFullYear() +
+      '-' +
+      (date.getMonth() + 1) +
+      '-' +
+      ('0' + date.getDate()).slice(-2) +
+      ' ' +
+      ('0' + date.getHours()).slice(-2) +
+      '-' +
+      ('0' + date.getMinutes()).slice(-2) +
+      '-' +
+      ('0' + date.getSeconds()).slice(-2)
+    );
+  };
+
   save() {
     if (this.props.savePreference) {
       const p = this.props.savePreference();
       this._sketchCanvas.save(
         p.imageType,
         p.transparent,
-        p.folder ? p.folder : "",
-        p.filename,
+        p.folder ?? '',
+        p.filename ?? this.buildFileName(),
         p.includeImage !== false,
         p.includeText !== false,
         p.cropToImageSize || false
       );
     } else {
-      const date = new Date();
       this._sketchCanvas.save(
-        "png",
+        'png',
         false,
-        "",
-        date.getFullYear() +
-          "-" +
-          (date.getMonth() + 1) +
-          "-" +
-          ("0" + date.getDate()).slice(-2) +
-          " " +
-          ("0" + date.getHours()).slice(-2) +
-          "-" +
-          ("0" + date.getMinutes()).slice(-2) +
-          "-" +
-          ("0" + date.getSeconds()).slice(-2),
+        '',
+        this.buildFileName(),
         true,
         true,
         false
@@ -262,12 +267,12 @@ export default class RNSketchCanvas extends React.Component {
   render() {
     return (
       <View style={this.props.containerStyle}>
-        <View style={{ flexDirection: "row" }}>
+        <View style={{ flexDirection: 'row' }}>
           <View
             style={{
-              flexDirection: "row",
+              flexDirection: 'row',
               flex: 1,
-              justifyContent: "flex-start",
+              justifyContent: 'flex-start',
             }}
           >
             {this.props.closeComponent && (
@@ -283,7 +288,7 @@ export default class RNSketchCanvas extends React.Component {
             {this.props.eraseComponent && (
               <TouchableOpacity
                 onPress={() => {
-                  this.setState({ color: "#00000000" });
+                  this.setState({ color: '#00000000' });
                 }}
               >
                 {this.props.eraseComponent}
@@ -292,9 +297,9 @@ export default class RNSketchCanvas extends React.Component {
           </View>
           <View
             style={{
-              flexDirection: "row",
+              flexDirection: 'row',
               flex: 1,
-              justifyContent: "flex-end",
+              justifyContent: 'flex-end',
             }}
           >
             {this.props.strokeWidthComponent && (
@@ -344,7 +349,7 @@ export default class RNSketchCanvas extends React.Component {
           style={this.props.canvasStyle}
           strokeColor={
             this.state.color +
-            (this.state.color.length === 9 ? "" : this.state.alpha)
+            (this.state.color.length === 9 ? '' : this.state.alpha)
           }
           onStrokeStart={this.props.onStrokeStart}
           onStrokeChanged={this.props.onStrokeChanged}
@@ -360,7 +365,7 @@ export default class RNSketchCanvas extends React.Component {
           permissionDialogTitle={this.props.permissionDialogTitle}
           permissionDialogMessage={this.props.permissionDialogMessage}
         />
-        <View style={{ flexDirection: "row" }}>
+        <View style={{ flexDirection: 'row' }}>
           <FlatList
             data={this.props.strokeColors}
             extraData={this.state}
