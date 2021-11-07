@@ -375,13 +375,9 @@ class SketchCanvas extends React.Component {
   }
 }
 
-SketchCanvas.MAIN_BUNDLE =
-  Platform.OS === 'ios' ? config.Constants.MainBundlePath : '';
-SketchCanvas.DOCUMENT =
-  Platform.OS === 'ios' ? config.Constants.NSDocumentDirectory : '';
-SketchCanvas.LIBRARY =
-  Platform.OS === 'ios' ? config.Constants.NSLibraryDirectory : '';
-SketchCanvas.CACHES =
-  Platform.OS === 'ios' ? config.Constants.NSCachesDirectory : '';
+SketchCanvas.MAIN_BUNDLE = '';
+SketchCanvas.DOCUMENT = '';
+SketchCanvas.LIBRARY = '';
+SketchCanvas.CACHES = '';
 
 module.exports = SketchCanvas;
